@@ -45,7 +45,16 @@
   --topbar-h: 60px;
 }
 
+
+@keyframes heartbeat {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+.heartbeat { animation: heartbeat 2s infinite ease-in-out; }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 
 html { font-size: 14px; }
 body {
@@ -194,18 +203,58 @@ body {
 
 /* ── DASHBOARD (Map + Panel) ──────────────── */
 .dash-layout {
-  display: grid;
-  grid-template-columns: 1fr 280px;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   overflow: hidden;
+  background: var(--bg);
 }
 
+.dash-metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  padding: 1.25rem 1.75rem;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.metric-mini-card {
+  padding: 1rem 1.5rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.2s;
+}
+.metric-mini-card:hover { transform: translateY(-2px); border-color: var(--yellow); }
+
+.metric-mini-card .label {
+  font-size: 0.68rem; font-weight: 800; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.6px;
+}
+.metric-mini-card .val {
+  font-size: 1.35rem; font-weight: 900; color: var(--text);
+}
+.metric-mini-card .val small { font-size: 0.85rem; color: var(--text-3); margin-left: 3px; }
+
+.dash-main-area {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  overflow: hidden;
+}
 
 .map-wrapper {
   position: relative;
   background: #f0f0f2;
+  overflow: hidden;
 }
+
 
 .map-top {
   position: absolute; top: 12px; left: 12px; right: 12px;
@@ -699,10 +748,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-around;
-    z-index: 200;
+    z-index: 9999;
     padding: 0 4px;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+    border-top: 1px solid var(--border);
   }
+
 
 
 
@@ -727,22 +778,31 @@ body {
   }
 
 
-  /* Dashboard — stack map on top, orders below */
   .dash-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: 45vh 1fr;
-    height: 100%;
-    overflow: hidden;
+    display: flex; flex-direction: column;
+    height: calc(100vh - var(--topbar-h) - var(--bottom-nav-h));
+    overflow-y: auto; overflow-x: hidden;
   }
-
-  .map-wrapper { border-radius: 0; }
-
-  .right-panel {
-    border-left: none;
-    border-top: 1px solid var(--border);
-    overflow-y: auto;
-    overflow-x: hidden;
+  .dash-metrics-row {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 0.75rem; gap: 0.5rem;
+    border-bottom: 1px solid var(--border);
   }
+  .metric-mini-card { padding: 0.75rem 0.5rem; gap: 2px; align-items: center; text-align: center; }
+  .metric-mini-card .label { font-size: 0.55rem; white-space: nowrap; }
+  .metric-mini-card .val { font-size: 1rem; }
+
+  .dash-main-area {
+    display: flex; flex-direction: column;
+    flex: none;
+  }
+  
+  .map-wrapper { 
+    height: 40vh; /* Fixed map height on mobile */
+    border-radius: 0; flex-shrink: 0;
+  }
+  .right-panel { border: none; height: auto; flex: none; }
+
 
   .fleet-scroll { padding: 0; }
   .fleet-chip { min-width: 76px; padding: 6px 8px; }

@@ -1,16 +1,38 @@
-# React + Vite
+# 🚕 OSH TAXI PARK — Диспетчердик панель
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Бул система Ош шаарындагы такси парктар үчүн иштелип чыккан заманбап диспетчердик башкаруу панели. 
 
-Currently, two official plugins are available:
+### ✨ Өзгөчөлүктөрү:
+- **📍 Түз эфирде көзөмөл**: Унаалардын картадагы кыймылын реалдуу убакытта көрүү.
+- **🌍 5 Тилди колдоо**: Кыргызча, Орусча, Англисче, Түркчө жана Өзбекче.
+- **📱 Мобилдик биринчи**: Телефондо жана ноутбукта бирдей ыңгайлуу иштейт.
+- **🚁 Симулятор режими**: Эгер сервер жок болсо, система автоматтык түрдө DEMO режиминде иштеп, таксилерди симуляция кылат.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Deployment Guide (Кантип иштетсе болот)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Сайтты интернетке чыгаруу үчүн эки вариант бар:
 
-## Expanding the ESLint configuration
+### 1. Vercel (Тез жана оңой — Фронтенд катары)
+Бул вариантта сайт тез ачылат, бирок сервер жок болгондуктан **DEMO (симулятор)** режиминде гана иштейт.
+- Vercel'ге кирип, GitHub'тан `taxi` репозиторийин тандаңыз.
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
+- Жүктөлгөндөн кийин сизге даяр шилтеме берет.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 2. Render.com (Толук иштеген система)
+Бул вариантта сайт да, сервер да (Socket.io) чогуу иштейт.
+- Render.com'го кирип, **Web Service** түзүңүз.
+- Репозиторийди тандап, төмөнкүдөй толтуруңуз:
+  - **Build Command**: `npm install && npm run build`
+  - **Start Command**: `npm start`
+- Бул вариант чыныгы серверди (Node.js) кошо иштетет.
+
+---
+
+## 🛠 Технологиялар
+- **Frontend**: React, Leaflet (Map), Framer Motion, Lucide Icons
+- **Backend**: Node.js, Express, Socket.io (Real-time tracking)
+- **Deployment**: Vercel / Render
+

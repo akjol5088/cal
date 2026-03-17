@@ -104,7 +104,24 @@ const DashboardPage = ({ t }) => {
   
   return (
     <div className="dash-layout">
-      {/* MAP */}
+      {/* TOP METRICS (Desktop/Mobile) */}
+      <div className="dash-metrics-row">
+        <div className="metric-mini-card">
+          <div className="label">{t.income_today}</div>
+          <div className="val">{stats.totalEarnings?.toLocaleString()} <small>{t.som}</small></div>
+        </div>
+        <div className="metric-mini-card">
+          <div className="label">{t.total_orders}</div>
+          <div className="val">{stats.tripsCompleted}</div>
+        </div>
+        <div className="metric-mini-card">
+          <div className="label">{t.active_fleet}</div>
+          <div className="val">{drivers.length}</div>
+        </div>
+      </div>
+
+      <div className="dash-main-area">
+
       <div className="map-wrapper">
         <MapView drivers={drivers} orders={orders} filterIdle={filterIdle} />
 
@@ -112,9 +129,12 @@ const DashboardPage = ({ t }) => {
         {/* Overlay top bar */}
         <div className="map-top">
           <div className={`map-chip ${connected || isDemo ? 'live' : 'conn'}`}>
-            {isDemo ? <Wifi size={12} color="#ff9500" /> : (connected ? <Wifi size={12} color="#34C759" /> : <WifiOff size={12} color="#aeaeb2" />)}
+            <span className={connected || isDemo ? 'heartbeat' : ''}>
+              {isDemo ? <Wifi size={12} color="#ff9500" /> : (connected ? <Wifi size={12} color="#34C759" /> : <WifiOff size={12} color="#aeaeb2" />)}
+            </span>
             {isDemo ? ' DEMO' : (connected ? ` ${t.live} · ${drivers.length} ${t.car}` : ` ${t.connecting}`)}
           </div>
+
 
           <div className="map-chip">
             <span style={{ color: '#34C759', fontWeight: 800 }}>●</span>
@@ -186,8 +206,12 @@ const DashboardPage = ({ t }) => {
         </div>
       </div>
     </div>
+  </div>
+
+
   );
 };
+
 
 
 export default DashboardPage;

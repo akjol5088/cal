@@ -161,7 +161,7 @@ const Topbar = ({ lang, setLang, t, page, setPage }) => {
 
       <div className="topbar-right">
         <div
-          className="conn-dot"
+          className={`conn-dot ${(connected || isDemo) ? 'heartbeat' : ''}`}
           style={{
             width: 8, height: 8, borderRadius: '50%', flexShrink: 0,
             background: isDemo ? '#ff9500' : (connected ? '#34C759' : '#aeaeb2'),
@@ -170,6 +170,7 @@ const Topbar = ({ lang, setLang, t, page, setPage }) => {
           }}
           title={isDemo ? 'Demo Mode' : (connected ? 'Online' : 'Offline')}
         />
+
         {isDemo && <span style={{ fontSize: '0.6rem', fontWeight: 800, color: '#ff9500' }}>DEMO</span>}
 
         <div className="lang-bar">
