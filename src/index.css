@@ -198,6 +198,7 @@ body {
   overflow: hidden;
   background: var(--bg);
   position: relative;
+  min-height: 0;
 }
 
 
@@ -812,7 +813,13 @@ body {
   .order-card { padding: 0.875rem; }
 
   /* Pages */
-  .page { padding: 1rem; height: 100%; overflow-y: auto; }
+  .page {
+    padding: 1rem;
+    height: calc(100dvh - var(--topbar-h) - var(--bottom-nav-h));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .content { overflow-y: auto; }
 
   .page-header {
     flex-wrap: wrap; gap: 0.75rem;

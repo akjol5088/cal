@@ -22,38 +22,46 @@ export const SocketProvider = ({ children }) => {
     } catch { return { totalEarnings: 0, tripsCompleted: 0 }; }
   });
   const [connected, setConnected] = useState(false);
-  const [isDemo, setIsDemo]       = useState(false);
+  const [isDemo, setIsDemo]       = useState(!SERVER); // instant demo if no server
+  const connectedRef = useRef(false);
 
   // Simulator fallback for offline/demo mode
   const sim = useSimulator();
 
   useEffect(() => {
+    // No server URL means cloud/Vercel deployment — run in demo mode only
+    if (!SERVER) {
+      console.log('No server URL — running in DEMO mode');
+      setIsDemo(true);
+      return;
+    }
+
     console.log('Connecting to:', SERVER);
 
-    // Connection timeout for demo fallback
+    // Connection timeout — switch to demo if not connected in 3s
     const connectionTimeout = setTimeout(() => {
-      if (!connected) {
-        console.log('Connection slow — entering DEMO mode');
+      if (!connectedRef.current) {
+        console.log('Not connected after 3s — entering DEMO mode');
         setIsDemo(true);
       }
     }, 3000);
 
-    const socket = io(SERVER, { 
-      reconnectionAttempts: 10,
-      timeout: 20000
+    const socket = io(SERVER, {
+      reconnectionAttempts: 3,
+      timeout: 5000,
     });
-    
+
     socketRef.current = socket;
 
     socket.on('connect', () => {
       clearTimeout(connectionTimeout);
+      connectedRef.current = true;
       setConnected(true);
       setIsDemo(false);
     });
 
     socket.on('connect_error', () => {
-      // Re-trigger timeout logic if it fails early
-      if (!connected && !isDemo) {
+      if (!connectedRef.current) {
         setIsDemo(true);
       }
     });
@@ -64,7 +72,7 @@ export const SocketProvider = ({ children }) => {
       setStats(newStats);
       localStorage.setItem('taxi_stats', JSON.stringify(newStats));
     });
-    
+
     socket.on('order:new', (order) => {
       setOrders(prev => [order, ...prev.filter(o => o._id !== order._id)]);
     });
