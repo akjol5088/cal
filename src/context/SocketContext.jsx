@@ -60,6 +60,11 @@ export const SocketProvider = ({ children }) => {
       setIsDemo(false);
     });
 
+    socket.on('disconnect', () => {
+      connectedRef.current = false;
+      setConnected(false);
+    });
+
     socket.on('connect_error', () => {
       if (!connectedRef.current) {
         setIsDemo(true);
@@ -112,10 +117,40 @@ export const SocketProvider = ({ children }) => {
   }, [isDemo]);
 
 
+  // Normalize drivers (Simulator uses .pos, Server uses .lat/.lng)
+  const normalizedDrivers = (isDemo ? sim.fleet : drivers).map(d => ({
+    _id: d._id || d.id,
+    name: d.name || d.driver,
+    car: d.car || d.model,
+    plate: d.plate || d.number,
+    tariff: d.tariff,
+    status: d.status,
+    rating: d.rating,
+    lat: d.lat || d.pos?.[0],
+    lng: d.lng || d.pos?.[1],
+  }));
+
+  // Normalize orders
+  const normalizedOrders = (isDemo ? sim.orders : orders).map(o => ({
+    _id: o._id || o.id,
+    customerName: o.customerName || 'Клиент',
+    phone: o.phone || '+996 ...',
+    fromAddress: o.fromAddress || 'Аныкталган жок',
+    toAddress: o.toAddress || 'Аныкталган жок',
+    fromLat: o.fromLat || o.pickup?.[0],
+    fromLng: o.fromLng || o.pickup?.[1],
+    toLat: o.toLat || o.destination?.[0],
+    toLng: o.toLng || o.destination?.[1],
+    distance: o.distance || o.dist,
+    price: o.price,
+    tariff: o.tariff,
+    status: o.status,
+  }));
+
   // Provide either server data or simulator data
   const value = {
-    drivers: isDemo ? sim.fleet : drivers,
-    orders:  isDemo ? sim.orders : orders,
+    drivers: normalizedDrivers,
+    orders:  normalizedOrders,
     stats:   isDemo ? sim.stats  : stats,
     connected,
     isDemo,

@@ -177,7 +177,7 @@ const Topbar = ({ lang, setLang, t, page, setPage }) => {
 const AppShell = () => {
   const [page, setPage] = useState(() => localStorage.getItem('taxi_active_page') || 'dashboard');
   const [lang, setLang] = useState(() => localStorage.getItem('taxi_lang') || 'ru');
-  const { drivers, stats } = useSocket();
+  const { drivers, orders, stats, acceptOrder } = useSocket();
 
   useEffect(() => {
     localStorage.setItem('taxi_active_page', page);
@@ -189,10 +189,18 @@ const AppShell = () => {
 
   const t = translations[lang] || translations.ru;
 
+  const handleSimpleAccept = (order) => {
+    const idleDrivers = drivers.filter(d => d.status === 'idle');
+    if (idleDrivers.length > 0) {
+      acceptOrder(order._id, idleDrivers[0]._id);
+    } else {
+      alert(t.no_free_cars);
+    }
+  };
 
   const renderPage = () => {
     switch (page) {
-      case 'orders':   return <OrdersPage orders={orders} onAccept={() => {}} t={t} />;
+      case 'orders':   return <OrdersPage orders={orders} onAccept={handleSimpleAccept} t={t} />;
       case 'fleet':    return <FleetPage fleet={drivers} t={t} />;
       case 'drivers':  return <DriversPage fleet={drivers} t={t} />;
       case 'finance':  return <FinancePage stats={stats} fleet={drivers} t={t} />;

@@ -74,6 +74,7 @@ const MapView = ({ drivers, orders, filterIdle }) => {
     const visible = filterIdle ? drivers.filter(d => d.status === 'idle') : drivers;
 
     visible.forEach(driver => {
+      if (!driver.lat || !driver.lng) return; // SKIP if no coords
       currentIds.add(driver._id);
       const prev = lastPosRef.current[driver._id];
       const newAngle = getAngle(prev, { lat: driver.lat, lng: driver.lng });
